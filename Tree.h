@@ -166,11 +166,16 @@ void Tree<T>::helper_inserter(std::vector<std::vector<std::string>>& ans, std::s
 
 	int mid = (left + right) / 2;
 
-	std::ostringstream ss;
-	ss << node->value;
-	std::string str = ss.str();
+	if constexpr (std::is_same_v<T, std::string>)
+		ans[level][mid] = node->value;
+	else
+		ans [level][mid] = std::to_string(node->value);
 
-	ans[level][mid] = str;
+	//std::ostringstream ss;
+	//ss << node->value;
+	//std::string str = ss.str();
+
+	//ans[level][mid] = str;
 
 	if (node->child_left)
 	{
