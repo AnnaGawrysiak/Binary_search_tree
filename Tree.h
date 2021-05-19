@@ -46,30 +46,38 @@ std::shared_ptr<Node<T>> Tree<T>::Create_New_Node(T val)
 template <typename T>
 void Tree<T>::insert(T key)
 {
+	if (root == nullptr)
+	{
+		root = Create_New_Node(key);
+		return;
+	}
+	
 	// start with the root node
 	std::shared_ptr<Node<T>> curr = root;
 	std::shared_ptr<Node<T>> parent = root; 
 
 	while (curr != nullptr) //traversing the tree to find the insertion point
 	{
-		parent = curr;
-
 		if (key == curr->value)
 			return;
 		else if (key < curr->value && curr->child_left != nullptr)
+		{
+			parent = curr;
 			curr = curr->child_left;
-		else if(curr->child_right != nullptr)
+		}
+		else if(key > curr->value && curr->child_right != nullptr)
+		{
+			parent = curr;
 			curr = curr->child_right;
+		}
 	}
 
-	//Change the value of the pointer to newNode
 	curr = Create_New_Node(key);
 
 	if (key < parent->value) 
 		parent->child_left = curr;
 	else 
 		parent->child_right = curr;
-	
 }
 
 template <typename T>
@@ -162,6 +170,8 @@ void Tree<T>::display()
 template <typename T>
 void Tree<T>::helper_inserter(std::vector<std::vector<std::string>>& ans, std::shared_ptr<Node<T>> node, int level, int left, int right)
 {
+	std::cout << "node->value" << node->value << std::endl;
+
 	if (!node) return;
 
 	int mid = (left + right) / 2;
@@ -171,11 +181,11 @@ void Tree<T>::helper_inserter(std::vector<std::vector<std::string>>& ans, std::s
 	else
 		ans [level][mid] = std::to_string(node->value);
 
-	//std::ostringstream ss;
-	//ss << node->value;
-	//std::string str = ss.str();
+	////std::ostringstream ss;
+	////ss << node->value;
+	////std::string str = ss.str();
 
-	//ans[level][mid] = str;
+	////ans[level][mid] = str;
 
 	if (node->child_left)
 	{

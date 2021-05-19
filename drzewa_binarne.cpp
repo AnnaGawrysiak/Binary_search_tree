@@ -6,7 +6,7 @@
 int main()
 { 
 
-    Tree<Node<int>> my_tree;
+    Tree<int> my_tree;
 
     std::vector<int> numbers = { 1, 20, 32, -4, 5 };
 
