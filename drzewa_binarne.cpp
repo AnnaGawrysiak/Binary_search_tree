@@ -8,7 +8,7 @@ int main()
 
     Tree<int> my_tree;
 
-    std::vector<int> numbers = { 1, 20, 32, -4, 5 };
+    std::vector<int> numbers = { 1, 20, 32, -4, 5, 10, 18, -11, 24, 88 };
 
     for (const auto& item : numbers)
     {

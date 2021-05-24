@@ -58,26 +58,26 @@ void Tree<T>::insert(T key)
 
 	while (curr != nullptr) //traversing the tree to find the insertion point
 	{
+		parent = curr;
+
 		if (key == curr->value)
 			return;
-		else if (key < curr->value && curr->child_left != nullptr)
+
+		else if (key < curr->value)
 		{
-			parent = curr;
 			curr = curr->child_left;
 		}
-		else if(key > curr->value && curr->child_right != nullptr)
+		
+		else if(key > curr->value)
 		{
-			parent = curr;
 			curr = curr->child_right;
 		}
 	}
 
-	curr = Create_New_Node(key);
-
 	if (key < parent->value) 
-		parent->child_left = curr;
+		parent->child_left = Create_New_Node(key);
 	else 
-		parent->child_right = curr;
+		parent->child_right = Create_New_Node(key);
 }
 
 template <typename T>
@@ -170,8 +170,6 @@ void Tree<T>::display()
 template <typename T>
 void Tree<T>::helper_inserter(std::vector<std::vector<std::string>>& ans, std::shared_ptr<Node<T>> node, int level, int left, int right)
 {
-	std::cout << "node->value" << node->value << std::endl;
-
 	if (!node) return;
 
 	int mid = (left + right) / 2;
@@ -181,11 +179,6 @@ void Tree<T>::helper_inserter(std::vector<std::vector<std::string>>& ans, std::s
 	else
 		ans [level][mid] = std::to_string(node->value);
 
-	////std::ostringstream ss;
-	////ss << node->value;
-	////std::string str = ss.str();
-
-	////ans[level][mid] = str;
 
 	if (node->child_left)
 	{
