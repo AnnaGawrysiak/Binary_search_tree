@@ -5,8 +5,11 @@
 #include <iomanip>
 #include <vector>
 #include <string>
-# include <sstream>
+#include <sstream>
+#include <stack>
+#include <map>
 #include "Node.h"
+#include "DefaultValue.h"
 
 template <typename T>
 class Tree
@@ -23,6 +26,8 @@ public:
 	void display();
 	int getDepth();
 	void helper_inserter(std::vector<std::vector<std::string>>& ans, std::shared_ptr<Node<T>> node, int level, int left, int right);
+	//void DFS(const Node<T>& source);
+	void DFS(T key);
 };
 
 template<typename T>
@@ -129,68 +134,68 @@ T Tree<T>::find_max()
 	return curr->value;
 }
 
-
-template<typename T>
-void Tree<T>::display()
-{
-	if (root == nullptr) 
-		return;
-	
-	// create table of empty strings "" based on the tree height/width
-
-	int depth = getDepth();
-	
-	//int max_nr_of_children = pow(2, (depth - 1));
-	//int nr_of_spaces = max_nr_of_children - 1;
-	//int width = max_nr_of_children + nr_of_spaces;
-	
-	//shorter version: we know the width is 2 ^ (depth + 1) - 1
-	int width = pow(2, depth + 1) - 1;
-
-	std::vector<std::string> row(width, " ");
-	std::vector<std::vector<std::string>> ans(depth, row);
-
-	// traverse the tree and fill in table values for non-nullptr nodes
-	// always put the value in the middle of the range.
-
-	std::shared_ptr<Node<T>> curr = root;
-	helper_inserter(ans, curr, 0, 0, width -1);
-
-	// Displaying the 2D vector
-	for (unsigned int i = 0; i < ans.size(); i++) 
-	{
-		for (unsigned int j = 0; j < ans[i].size(); j++)
-		{
-			std::cout << std::setw(8) << ans[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-
-}
-template <typename T>
-void Tree<T>::helper_inserter(std::vector<std::vector<std::string>>& ans, std::shared_ptr<Node<T>> node, int level, int left, int right)
-{
-	if (!node) return;
-
-	int mid = (left + right) / 2;
-
-	if constexpr (std::is_same_v<T, std::string>)
-		ans[level][mid] = node->value;
-	else
-		ans [level][mid] = std::to_string(node->value);
-
-
-	if (node->child_left)
-	{
-		helper_inserter(ans, node->child_left, level + 1, left, mid - 1);
-	}
-
-	if (node->child_right)
-	{
-		helper_inserter(ans, node->child_right, level + 1, mid+1, right);
-	}
-
-}
+//
+//template<typename T>
+//void Tree<T>::display()
+//{
+//	if (root == nullptr) 
+//		return;
+//	
+//	// create table of empty strings "" based on the tree height/width
+//
+//	int depth = getDepth();
+//	
+//	//int max_nr_of_children = pow(2, (depth - 1));
+//	//int nr_of_spaces = max_nr_of_children - 1;
+//	//int width = max_nr_of_children + nr_of_spaces;
+//	
+//	//shorter version: we know the width is 2 ^ (depth + 1) - 1
+//	int width = pow(2, depth + 1) - 1;
+//
+//	std::vector<std::string> row(width, " ");
+//	std::vector<std::vector<std::string>> ans(depth, row);
+//
+//	// traverse the tree and fill in table values for non-nullptr nodes
+//	// always put the value in the middle of the range.
+//
+//	std::shared_ptr<Node<T>> curr = root;
+//	helper_inserter(ans, curr, 0, 0, width -1);
+//
+//	// Displaying the 2D vector
+//	for (unsigned int i = 0; i < ans.size(); i++) 
+//	{
+//		for (unsigned int j = 0; j < ans[i].size(); j++)
+//		{
+//			std::cout << std::setw(8) << ans[i][j] << " ";
+//		}
+//		std::cout << std::endl;
+//	}
+//
+//}
+//template <typename T>
+//void Tree<T>::helper_inserter(std::vector<std::vector<std::string>>& ans, std::shared_ptr<Node<T>> node, int level, int left, int right)
+//{
+//	if (!node) return;
+//
+//	int mid = (left + right) / 2;
+//
+//	if constexpr (std::is_same_v<T, std::string>)
+//		ans[level][mid] = node->value;
+//	else
+//		ans [level][mid] = std::to_string(node->value);
+//
+//
+//	if (node->child_left)
+//	{
+//		helper_inserter(ans, node->child_left, level + 1, left, mid - 1);
+//	}
+//
+//	if (node->child_right)
+//	{
+//		helper_inserter(ans, node->child_right, level + 1, mid+1, right);
+//	}
+//
+//}
 
 template<typename T>
 int Tree<T>::getDepth()
@@ -217,4 +222,37 @@ int Tree<T>::getDepth()
 	}
 
 	return std::max(counter_right, counter_left);
+}
+
+template<typename T>
+void Tree<T>::DFS(T key)
+{
+	std::shared_ptr<Node<T>> source = search(key);
+	std::stack<std::shared_ptr<Node<T>> > mystack;
+	mystack.push(source);
+
+	std::map<std::shared_ptr<Node<T>>, bool> discovered; // insert default value: false
+	//std::map<T, DefaultFalse> discovered;
+	
+	while (!mystack.empty())
+	{
+		std::shared_ptr<Node<T>> curr = mystack.top();
+		mystack.pop();
+
+		// if the vertex is already discovered yet,
+	   // ignore it
+		if(discovered[curr])
+			continue;
+
+		discovered[curr] = true;
+		std::cout << curr->value << " ";
+		// add undiscovered children of the curr
+		if(curr->child_left != nullptr && discovered[curr->child_left] == false)
+			mystack.push(curr->child_left);
+
+		if(curr->child_right != nullptr && discovered[curr->child_right] == false)
+			mystack.push(curr->child_right);
+
+	}
+
 }
