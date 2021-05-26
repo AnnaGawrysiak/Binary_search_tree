@@ -8,7 +8,7 @@ int main()
 
     Tree<int> my_tree;
 
-    std::vector<int> numbers = { 1, 20, 32, -4, 5, 10, 18, -11 };
+    std::vector<int> numbers = { 1, 20, -4, -11, 5, 32, 30, 18 };
 
     for (const auto& item : numbers)
     {
@@ -16,7 +16,7 @@ int main()
     }
 
     int value = 5;
-   // my_tree.display();
+    my_tree.display();
     std::cout << "Min value: " << my_tree.find_min() << std::endl;
     std::cout << "Max value: " << my_tree.find_max() << std::endl;
     std::cout << "Searched value: " << value << " : " << my_tree.search(value) << std::endl;
@@ -25,6 +25,11 @@ int main()
 
     std::cout << "Depth First Search: " << std::endl;
     my_tree.DFS(1);
+    std::cout << std::endl;
+    std::cout << "Bredth First Search: " << std::endl;
+    my_tree.BFS(1);
+    std::cout << std::endl;
+    std::cout << "Depth: " << my_tree.getDepth() << std::endl;
 
     return 0;
 }
